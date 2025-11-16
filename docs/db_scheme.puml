@@ -143,6 +143,7 @@ User ||--o{ Course : User is a PROFESSOR type
 User ||--o{ Enrollment : User is a STUDENT type
 Course ||--o{ CourseTag
 CourseTag }o--|| Tag
+Course }o--o{ Tag
 Course ||--o{ CourseCategory
 Course ||--o{ Enrollment
 Course ||--o{ Module
