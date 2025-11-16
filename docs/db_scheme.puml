@@ -18,7 +18,7 @@ Table(User) {
 
 Table(Profile) {
     primary_key(id)
-    foreign_key(user_id)
+    unique(foreign_key(user_id))
     string bio
 }
 
@@ -38,6 +38,7 @@ Table(CourseCategory) {
 }
 
 Table(CourseTag) {
+    primary_key(id)
     foreign_key(course)
     foreign_key(tag_id)
 }
@@ -65,7 +66,7 @@ Table(Module) {
 
 Table(Quiz) {
     primary_key(id)
-    foreign_key(module_id)
+    unique(foreign_key(module_id))
     string title
 }
 
@@ -144,7 +145,7 @@ User ||--o{ Enrollment : User is a STUDENT type
 Course ||--o{ CourseTag
 CourseTag }o--|| Tag
 Course }o--o{ Tag
-Course ||--o{ CourseCategory
+CourseCategory ||--o{ Course
 Course ||--o{ Enrollment
 Course ||--o{ Module
 Module ||--o{ Lesson
