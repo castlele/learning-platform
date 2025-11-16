@@ -1,0 +1,159 @@
+@startuml
+
+!define Table(name) entity name << (E,#FFAAAA) >>
+!define primary_key(x) <b>int x PK</b>
+!define foreign_key(x) <i>int x <b>FK</b></i>
+!define unique(x) <color:green>x</color>
+!define not_null(x) <u>x</u>
+
+hide methods
+hide stereotypes
+
+' entities
+
+Table(User) {
+    primary_key(id)
+    { ADMIN, STUDENT, PROFESSOR } role
+}
+
+Table(Profile) {
+    primary_key(id)
+    foreign_key(user_id)
+    string bio
+}
+
+Table(Course) {
+    primary_key(id)
+    foreign_key(professor_id)
+    foreign_key(category_id)
+    string title
+    string description
+    date startDate
+    date dueDate
+}
+
+Table(CourseCategory) {
+    primary_key(id)
+    string name
+}
+
+Table(CourseTag) {
+    foreign_key(course)
+    foreign_key(tag_id)
+}
+
+Table(Tag) {
+    primary_key(id)
+    string name
+}
+
+Table(Enrollment) {
+    primary_key(id)
+    foreign_key(student_id)
+    foreign_key(course_id)
+    date enrollDate
+    { ACTIVE, COMPLETED, CANCELED } status
+}
+
+Table(Module) {
+    primary_key(id)
+    foreign_key(course_id)
+    string title
+    string description
+    int orderIndex
+}
+
+Table(Quiz) {
+    primary_key(id)
+    foreign_key(module_id)
+    string title
+}
+
+Table(QuizQuestion) {
+    primary_key(id)
+    foreign_key(quiz_id)
+    string text
+    { SINGLE_CHOICE, MULTIPLE_CHOICE } type
+}
+
+Table(QuizAnswerOption) {
+    primary_key(id)
+    foreign_key(question_id)
+    string text
+    boolean isCorrent
+}
+
+Table(QuizSubmission) {
+    primary_key(id)
+    foreign_key(quiz_id)
+    foreign_key(student_id)
+    int score
+    dateTime submittedAt
+}
+
+Table(Lesson) {
+    primary_key(id)
+    foreign_key(module_id)
+    string title
+    string content
+}
+
+Table(Assignment) {
+    primary_key(id)
+    foreign_key(lesson_id)
+    string title
+    string description
+    date dueDate
+    int maxScore
+}
+
+Table(AssignmentSubmission) {
+    primary_key(id)
+    foreign_key(assignment_id)
+    foreign_key(student_id)
+    dateTime submittedAt
+    string content
+    int score
+    string feedback
+}
+
+' notes
+
+note right of Tag
+    Examples of the tag:
+    - Java
+    - Hibernate
+    - PostgreSQL
+end note
+
+note bottom of CourseCategory
+    Examples of the category:
+    - Programming
+    - Design
+    - DevOps
+end note
+
+' relationships
+' one-to-one: ||--||
+' one-to-many: ||--o{
+' many-to-many: }o--o{
+
+User ||--|| Profile
+User ||--o{ Course : User is a PROFESSOR type
+User ||--o{ Enrollment : User is a STUDENT type
+Course ||--o{ CourseTag
+CourseTag }o--|| Tag
+Course ||--o{ CourseCategory
+Course ||--o{ Enrollment
+Course ||--o{ Module
+Module ||--o{ Lesson
+Module ||--|| Quiz
+Quiz ||--o{ QuizQuestion
+QuizQuestion ||--o{ QuizAnswerOption
+QuizSubmission |o--|| User : User is a STUDENT type
+QuizSubmission |o--|| Quiz
+Assignment }o--|| Lesson
+AssignmentSubmission |o--|| User : User is a STUDENT type
+AssignmentSubmission |o--|| Assignment
+
+@enduml
