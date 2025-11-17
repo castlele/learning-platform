@@ -22,7 +22,6 @@ public class QuizService {
     private final QuizAnswerOptionRepository quizAnswerOptionRepository;
     private final UserRepository userRepository;
 
-
     public Quiz createQuiz(Long professorId, Long moduleId, QuizCreationRequest request) {
         User professor = userRepository.findById(professorId)
                 .orElseThrow(() -> new IllegalArgumentException("Professor not found: " + professorId));

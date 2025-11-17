@@ -33,14 +33,12 @@ public class Quiz {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @Builder.Default
-    private Set<QuizQuestion> questions = new HashSet<>();
+    private Set<QuizQuestion> questions;
 
     @OneToMany(
             mappedBy = "quiz",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @Builder.Default
-    private Set<QuizSubmission> submissions = new HashSet<>();
+    private Set<QuizSubmission> submissions;
 }

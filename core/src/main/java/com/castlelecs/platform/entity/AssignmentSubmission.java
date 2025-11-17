@@ -1,6 +1,7 @@
 package com.castlelecs.platform.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "assignment_submissions")
 @Data
+@Builder
 public class AssignmentSubmission {
 
     @Id

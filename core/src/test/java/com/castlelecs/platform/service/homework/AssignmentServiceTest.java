@@ -123,12 +123,13 @@ public class AssignmentServiceTest {
     public void testAssignmentUpdate() {
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow();
 
-        Assignment oldAssignment = new Assignment();
-        oldAssignment.setLesson(lesson);
-        oldAssignment.setTitle("OLD");
-        oldAssignment.setDescription("OLD");
-        oldAssignment.setDueDate(LocalDate.now().plusDays(3));
-        oldAssignment.setMaxScore(50);
+        Assignment oldAssignment = Assignment.builder()
+                .lesson(lesson)
+                .title("OLD")
+                .description("OLD")
+                .dueDate(LocalDate.now().plusDays(3))
+                .maxScore(50)
+                .build();
         assignmentRepository.save(oldAssignment);
 
         AssignmentCreationRequest updateRequest = new AssignmentCreationRequest(

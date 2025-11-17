@@ -1,6 +1,7 @@
 package com.castlelecs.platform.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "assignments")
 @Data
+@Builder
 public class Assignment {
 
     @Id
@@ -25,7 +27,6 @@ public class Assignment {
     @Column(columnDefinition = "text")
     private String description;
 
-    @Column(name = "due_date")
     private LocalDate dueDate;
 
     @Column(name = "max_score", nullable = false)

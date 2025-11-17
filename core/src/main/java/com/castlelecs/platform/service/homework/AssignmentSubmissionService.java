@@ -36,13 +36,14 @@ public class AssignmentSubmissionService {
         Assignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Assignment not found: " + assignmentId));
 
-        AssignmentSubmission submission = new AssignmentSubmission();
-        submission.setAssignment(assignment);
-        submission.setStudent(student);
-        submission.setSubmittedAt(LocalDateTime.now());
-        submission.setContent(request.getContent());
-        submission.setScore(null);
-        submission.setFeedback(null);
+        AssignmentSubmission submission = AssignmentSubmission.builder()
+                .assignment(assignment)
+                .student(student)
+                .submittedAt(LocalDateTime.now())
+                .content(request.getContent())
+                .score(null)
+                .feedback(null)
+                .build();
 
         return assignmentSubmissionRepository.save(submission);
     }

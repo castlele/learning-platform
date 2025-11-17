@@ -42,16 +42,14 @@ public class Course {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @Builder.Default
-    private Set<Module> modules = new HashSet<>();
+    private Set<Module> modules;
 
     @OneToMany(
             mappedBy = "course",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @Builder.Default
-    private Set<Enrollment> enrollments = new HashSet<>();
+    private Set<Enrollment> enrollments;
 
     @ManyToMany
     @JoinTable(
@@ -59,7 +57,6 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    @Builder.Default
-    private Set<Tag> tags = new HashSet<>();
+    private Set<Tag> tags;
 }
 

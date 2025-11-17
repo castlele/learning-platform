@@ -20,17 +20,12 @@ public class Lesson {
     @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String title;
 
     @Column(columnDefinition = "text")
     private String content;
 
-    @OneToMany(
-            mappedBy = "lesson",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @Builder.Default
-    private Set<Assignment> assignments = new HashSet<>();
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Assignment> assignments;
 }

@@ -5,9 +5,7 @@ import com.castlelecs.platform.entity.Course;
 import com.castlelecs.platform.entity.CourseCategory;
 import com.castlelecs.platform.entity.User;
 import com.castlelecs.platform.entity.UserRole;
-import com.castlelecs.platform.repository.CourseCategoryRepository;
-import com.castlelecs.platform.repository.CourseRepository;
-import com.castlelecs.platform.repository.UserRepository;
+import com.castlelecs.platform.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final CourseCategoryRepository courseCategoryRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @Transactional
     public Course createCourse(Long professorId, CourseCreationRequest request) {
@@ -87,6 +86,8 @@ public class CourseService {
         if (!courseRepository.existsById(courseId)) {
             throw new IllegalArgumentException("Course not found: " + courseId);
         }
+
+        enrollmentRepository.deleteByCourseId(courseId);
         courseRepository.deleteById(courseId);
     }
 

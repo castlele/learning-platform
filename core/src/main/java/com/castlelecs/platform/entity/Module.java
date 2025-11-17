@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "modules")
@@ -20,30 +21,15 @@ public class Module {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String title;
 
-    @Column
+    @Column(columnDefinition = "text")
     private String description;
 
     @Column(name = "order_index")
     private Integer orderIndex;
 
-    @OneToMany(
-            mappedBy = "module",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @Builder.Default
-    private List<Lesson> lessons = new ArrayList<>();
-
-    @OneToOne(
-            mappedBy = "module",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private Quiz quiz;
-
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Lesson> lessons;
 }
-

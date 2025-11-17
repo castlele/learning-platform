@@ -34,12 +34,13 @@ public class AssignmentService {
             throw new IllegalStateException("Professor " + professorId + " does not own this lesson's course");
         }
 
-        Assignment assignment = new Assignment();
-        assignment.setLesson(lesson);
-        assignment.setTitle(request.getTitle());
-        assignment.setDescription(request.getDescription());
-        assignment.setDueDate(request.getDueDate());
-        assignment.setMaxScore(request.getMaxScore());
+        Assignment assignment = Assignment.builder()
+                .lesson(lesson)
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .dueDate(request.getDueDate())
+                .maxScore(request.getMaxScore())
+                .build();
 
         return assignmentRepository.save(assignment);
     }
