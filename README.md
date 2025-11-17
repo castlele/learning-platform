@@ -10,6 +10,7 @@
 
 Модули проекта:
 - core: хранит domain и data слои (entity, repository, service). **Здесь реализована обязательная часть практической работы**
+- app: запускает spring приложение, тестирует использование data.sql
 
 Архитектуру проекта можно посмотреть в файле [core_architecture.puml](./docs/core_architecture.puml):
 
@@ -23,11 +24,18 @@
 ./gradlew :core:test
 ```
 
-Запуск всех unit-тестов:
+Результаты:
+
+
+Для тестирования data.sql (тестового наполнения данными):
 
 ```bash
-./gradlew test
+./gradlew :app:bootRun
 ```
+
+Результат:
+
+![datasql_result](./docs/res/datasql_result.png)
 
 ## Схема базы данных
 
