@@ -8,8 +8,12 @@
 
 ### Структура проекта
 
-Проект поделен на несколько модулей:
-- core: хранит domain и data слои (entity, repository, service)
+Модули проекта:
+- core: хранит domain и data слои (entity, repository, service). **Здесь реализована обязательная часть практической работы**
+
+Архитектуру проекта можно посмотреть в файле [core_architecture.puml](./docs/core_architecture.puml):
+
+![core_architecture](./docs/core_architecture.png)
 
 ### Тестирование
 

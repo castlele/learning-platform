@@ -37,7 +37,9 @@ public class UserRepositoryTest {
                 .role(UserRole.STUDENT)
                 .build();
         Profile profile = Profile.builder()
-                .bio("Test bio")
+                .email("someemail@email.do")
+                .firstName("Name")
+                .lastName("NotName")
                 .build();
 
         user.setProfile(profile);

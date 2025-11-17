@@ -14,8 +14,14 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 1000)
-    private String bio;
+    @Column
+    private String email;
+
+    @Column
+    private String firstName;
+
+    @Column
+    private String lastName;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)

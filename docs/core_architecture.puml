@@ -1,184 +1,45 @@
 @startuml
 
-skinparam packageStyle rectangle
-skinparam classAttributeIconSize 0
-hide circle
-
-' ======================
-' DOMAIN ENTITIES
-' ======================
-package "Domain Entities" {
-
-  class User <<entity>>
-  class Profile <<entity>>
-
-  class Course <<entity>>
-  class CourseCategory <<entity>>
-  class Module <<entity>>
-  class Lesson <<entity>>
-
-  class Enrollment <<entity>>
-
-  class Assignment <<entity>>
-  class AssignmentSubmission <<entity>>
-
-  class Quiz <<entity>>
-  class QuizQuestion <<entity>>
-  class QuizAnswerOption <<entity>>
-  class QuizSubmission <<entity>>
+package Repositories {
+    interface UserRepository
+    interface CourseRepository
+    interface ModuleRepository
+    interface LessonRepository
+    interface EnrollmentRepository
+    interface AssignmentRepository
+    interface AssignmentSubmissionRepository
+    interface QuizRepository
+    interface QuizQuestionRepository
+    interface QuizAnswerOptionRepository
+    interface QuizSubmissionRepository
+    interface CourseCategoryRepository
 }
 
-' ======================
-' DTOs / COMMANDS
-' ======================
-package "DTOs / Commands" {
+package Auth {
 
-  class StudentRegistrationForm <<dto>> {
-    - String email
-    - String password
-    - String firstName
-    - String lastName
-  }
-
-  class ProfessorCreationRequest <<dto>> {
-    - String email
-    - String password
-    - String firstName
-    - String lastName
-  }
-
-  class CourseCommand <<dto>> {
-    - String title
-    - String description
-    - Long categoryId
-    - LocalDate startDate
-    - LocalDate dueDate
-  }
-
-  class ModuleCommand <<dto>> {
-    - String title
-    - String description
-    - Integer orderIndex
-  }
-
-  class LessonCommand <<dto>> {
-    - String title
-    - String content
-  }
-
-  class AssignmentCommand <<dto>> {
-    - String title
-    - String description
-    - LocalDate dueDate
-    - Integer maxScore
-  }
-
-  class AssignmentSubmissionCommand <<dto>> {
-    - String content
-  }
-
-  class QuizCommand <<dto>> {
-    - String title
-    - Integer passingScore
-  }
-
-  class QuizQuestionCommand <<dto>> {
-    - String text
-    - String type
-  }
-
-  class QuizAnswerOptionCommand <<dto>> {
-    - String text
-    - boolean correct
-  }
-
-  class QuizSubmissionCommand <<dto>> {
-    - Long quizId
-    - Map<Long, Set<Long>> chosenOptionsPerQuestion
-  }
-
-  class QuizResultDto <<dto>> {
-    - Long quizId
-    - Long studentId
-    - Integer score
-    - boolean passed
-  }
+    class AuthService {
+        + registerStudent(form: StudentRegistrationForm): User
+        + createProfessor(form: ProfessorRegistrationForm): User
+    }
 }
 
-' ======================
-' REPOSITORIES
-' ======================
-package "Repositories (ports)" {
+AuthService --> UserRepository
 
-  interface UserRepository
-  interface CourseRepository
-  interface ModuleRepository
-  interface LessonRepository
-  interface EnrollmentRepository
-  interface AssignmentRepository
-  interface AssignmentSubmissionRepository
-  interface QuizRepository
-  interface QuizQuestionRepository
-  interface QuizAnswerOptionRepository
-  interface QuizSubmissionRepository
-  interface CourseCategoryRepository
-}
-
-UserRepository ---- User
-CourseRepository ---- Course
-ModuleRepository ---- Module
-LessonRepository ---- Lesson
-EnrollmentRepository ---- Enrollment
-AssignmentRepository ---- Assignment
-AssignmentSubmissionRepository ---- AssignmentSubmission
-QuizRepository ---- Quiz
-QuizQuestionRepository ---- QuizQuestion
-QuizAnswerOptionRepository ---- QuizAnswerOption
-QuizSubmissionRepository ---- QuizSubmission
-CourseCategoryRepository ---- CourseCategory
-
-' ======================
-' DOMAIN SERVICES / APPLICATION SERVICES
-' ======================
-package "User & Auth" {
-
-  class UserRegistrationService <<service>> {
-    + registerStudent(form: StudentRegistrationForm): User
-    + createProfessor(adminId: Long, req: ProfessorCreationRequest): User
-  }
-
-  class AdminUserService <<service>> {
-    + listProfessors(): Set<User>
-    + deactivateUser(adminId: Long, userId: Long)
-  }
-}
-
-UserRegistrationService --> UserRepository
-UserRegistrationService --> Profile
-UserRegistrationService --> StudentRegistrationForm
-UserRegistrationService --> ProfessorCreationRequest
-
-AdminUserService --> UserRepository
-
-' ======================
-' Course / Module / Lesson Management
-' ======================
 package "Course Management" {
-
-  class CourseService <<service>> {
+  class CourseService {
     + createCourse(professorId: Long, cmd: CourseCommand): Course
     + updateCourse(courseId: Long, cmd: CourseCommand): Course
     + deleteCourse(courseId: Long)
     + getCourse(courseId: Long): Course
   }
 
-  class ModuleService <<service>> {
+  class ModuleService {
     + addModule(courseId: Long, cmd: ModuleCommand): Module
     + updateModule(moduleId: Long, cmd: ModuleCommand): Module
     + deleteModule(moduleId: Long)
   }
 
-  class LessonService <<service>> {
+  class LessonService {
     + addLesson(moduleId: Long, cmd: LessonCommand): Lesson
     + updateLesson(lessonId: Long, cmd: LessonCommand): Lesson
     + deleteLesson(lessonId: Long)
@@ -188,22 +49,16 @@ package "Course Management" {
 CourseService --> CourseRepository
 CourseService --> UserRepository
 CourseService --> CourseCategoryRepository
-CourseService --> CourseCommand
 
 ModuleService --> ModuleRepository
 ModuleService --> CourseRepository
-ModuleService --> ModuleCommand
 
 LessonService --> LessonRepository
 LessonService --> ModuleRepository
-LessonService --> LessonCommand
 
-' ======================
-' Enrollment / Course assignment
-' ======================
-package "Enrollment / Course Assignment" {
+package Enrollment {
 
-  class EnrollmentService <<service>> {
+  class EnrollmentService {
     + enroll(studentId: Long, courseId: Long): Enrollment
     + unenroll(studentId: Long, courseId: Long)
     + getCoursesForStudent(studentId: Long): Set<Course>
@@ -215,18 +70,15 @@ EnrollmentService --> EnrollmentRepository
 EnrollmentService --> UserRepository
 EnrollmentService --> CourseRepository
 
-' ======================
-' Homework / Assignments
-' ======================
-package "Homework" {
+package Homework {
 
-  class AssignmentService <<service>> {
+  class AssignmentService {
     + createAssignment(professorId: Long, lessonId: Long, cmd: AssignmentCommand): Assignment
     + updateAssignment(assignmentId: Long, cmd: AssignmentCommand): Assignment
     + deleteAssignment(assignmentId: Long)
   }
 
-  class AssignmentSubmissionService <<service>> {
+  class AssignmentSubmissionService {
     + submitAssignment(studentId: Long, assignmentId: Long, cmd: AssignmentSubmissionCommand): AssignmentSubmission
     + getSubmissionsForProfessor(professorId: Long): Set<AssignmentSubmission>
   }
@@ -235,30 +87,25 @@ package "Homework" {
 AssignmentService --> AssignmentRepository
 AssignmentService --> LessonRepository
 AssignmentService --> UserRepository
-AssignmentService --> AssignmentCommand
 
 AssignmentSubmissionService --> AssignmentSubmissionRepository
 AssignmentSubmissionService --> AssignmentRepository
 AssignmentSubmissionService --> UserRepository
-AssignmentSubmissionService --> AssignmentSubmissionCommand
 
-' ======================
-' Tests / Quizzes
-' ======================
-package "Tests / Quizzes" {
+package Quiz {
 
-  interface QuizScoringPolicy <<domain-service>> {
+  interface QuizScoringPolicy {
     + calculateScore(quiz: Quiz, submission: QuizSubmission): Integer
     + isPassed(quiz: Quiz, score: Integer): boolean
   }
 
-  class QuizService <<service>> {
+  class QuizService {
     + createQuiz(professorId: Long, moduleId: Long, cmd: QuizCommand): Quiz
     + addQuestion(quizId: Long, cmd: QuizQuestionCommand, options: Set<QuizAnswerOptionCommand>): QuizQuestion
     + deleteQuiz(quizId: Long)
   }
 
-  class QuizSubmissionService <<service>> {
+  class QuizSubmissionService {
     + submitQuiz(studentId: Long, cmd: QuizSubmissionCommand): QuizResultDto
     + getResultsForStudent(studentId: Long): Set<QuizResultDto>
     + getResultsForQuiz(quizId: Long): Set<QuizResultDto>
@@ -269,46 +116,79 @@ QuizService --> QuizRepository
 QuizService --> ModuleRepository
 QuizService --> QuizQuestionRepository
 QuizService --> QuizAnswerOptionRepository
-QuizService --> QuizCommand
-QuizService --> QuizQuestionCommand
-QuizService --> QuizAnswerOptionCommand
 QuizService --> UserRepository
 
 QuizSubmissionService --> QuizSubmissionRepository
 QuizSubmissionService --> QuizRepository
 QuizSubmissionService --> UserRepository
-QuizSubmissionService --> QuizSubmissionCommand
-QuizSubmissionService --> QuizResultDto
-QuizSubmissionService --> QuizScoringPolicy
 
-QuizScoringPolicy --> Quiz
-QuizScoringPolicy --> QuizSubmission
+package DTO {
+    class StudentRegistrationForm {
+        - String firstName
+        - String lastName
+    }
 
-' ======================
-' High-level relationships to entities
-' ======================
+    class ProfessorRegistrationForm {
+        - String firstName
+        - String lastName
+    }
 
-' Users & profiles
-User "1" -- "1" Profile
+    class CourseCommand {
+        - String title
+        - String description
+        - Long categoryId
+        - LocalDate startDate
+        - LocalDate dueDate
+    }
 
-' Course structure
-Course "1" -- "0..*" Module
-Module "1" -- "0..*" Lesson
+    class ModuleCommand {
+        - String title
+        - String description
+        - Integer orderIndex
+    }
 
-' Enrollment
-Enrollment "0..*" -- "1" User : student
-Enrollment "0..*" -- "1" Course
+    class LessonCommand {
+        - String title
+        - String content
+    }
 
-' Homework
-Lesson "1" -- "0..*" Assignment
-Assignment "1" -- "0..*" AssignmentSubmission
-AssignmentSubmission "1" -- "1" User : student
+    class AssignmentCommand {
+        - String title
+        - String description
+        - LocalDate dueDate
+        - Integer maxScore
+    }
 
-' Quizzes
-Module "1" -- "0..1" Quiz
-Quiz "1" -- "0..*" QuizQuestion
-QuizQuestion "1" -- "0..*" QuizAnswerOption
-QuizSubmission "0..*" -- "1" Quiz
-QuizSubmission "0..*" -- "1" User : student
+    class AssignmentSubmissionCommand {
+        - String content
+    }
+
+    class QuizCommand {
+        - String title
+        - Integer passingScore
+    }
+
+    class QuizQuestionCommand {
+        - String text
+        - String type
+    }
+
+    class QuizAnswerOptionCommand {
+        - String text
+        - boolean correct
+    }
+
+    class QuizSubmissionCommand {
+        - Long quizId
+        - Map<Long, Set<Long>> chosenOptionsPerQuestion
+    }
+
+    class QuizResultDto {
+        - Long quizId
+        - Long studentId
+        - Integer score
+        - boolean passed
+    }
+}
 
 @enduml

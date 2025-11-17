@@ -19,7 +19,8 @@ Table(User) {
 Table(Profile) {
     primary_key(id)
     unique(foreign_key(user_id))
-    string bio
+    string firstName
+    string lastName
 }
 
 Table(Course) {
